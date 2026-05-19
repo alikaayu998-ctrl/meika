@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sistem Data Siswa Digital</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body{
+      background:#f4f6f9;
+      padding:20px;
+    }
+
+    .container{
+      max-width:1000px;
+      margin:auto;
+      background:white;
+      padding:25px;
+      border-radius:12px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:25px;
+      color:#2c3e50;
+    }
+
+    .form-group{
+      margin-bottom:15px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:5px;
+      font-weight:bold;
+    }
+
+    input{
+      width:100%;
+      padding:10px;
+      border:1px solid #ccc;
+      border-radius:8px;
+    }
+
+    .btn{
+      padding:10px 18px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      color:white;
+      font-weight:bold;
+      margin-top:10px;
+    }
+
+    .btn-add{
+      background:#27ae60;
+    }
+
+    .btn-edit{
+      background:#f39c12;
+    }
+
+    .btn-delete{
+      background:#e74c3c;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:25px;
+    }
+
+    table th, table td{
+      border:1px solid #ddd;
+      padding:12px;
+      text-align:center;
+    }
+
+    table th{
+      background:#3498db;
+      color:white;
+    }
+
+    tr:nth-child(even){
+      background:#f9f9f9;
+    }
+
+    .action-btn{
+      margin:2px;
+      padding:6px 10px;
+      border:none;
+      border-radius:5px;
+      color:white;
+      cursor:pointer;
+    }
+
+    .edit{
+      background:#f39c12;
+    }
+
+    .delete{
+      background:#e74c3c;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>📚 Sistem Data Siswa Digital</h1>
+
+    <div class="form-group">
+      <label>Nama Siswa</label>
+      <input type="text" id="nama">
+    </div>
+
+    <div class="form-group">
+      <label>Kelas</label>
+      <input type="text" id="kelas">
+    </div>
+
+    <div class="form-group">
+      <label>NIS</label>
+      <input type="text" id="nis">
+    </div>
+
+    <button class="btn btn-add" onclick="tambahData()">
+      Tambah Data
+    </button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama</th>
+          <th>Kelas</th>
+          <th>NIS</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+
+      <tbody id="tabelData">
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    let dataSiswa = [];
+    let editIndex = -1;
+
+    function renderTable(){
+      const tabel = document.getElementById("tabelData");
+      tabel.innerHTML = "";
+
+      dataSiswa.forEach((siswa, index) => {
+        tabel.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${siswa.nama}</td>
+            <td>${siswa.kelas}</td>
+            <td>${siswa.nis}</td>
+            <td>
+              <button class="action-btn edit" onclick="editData(${index})">
+                Edit
+              </button>
+
+              <button class="action-btn delete" onclick="hapusData(${index})">
+                Hapus
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function tambahData(){
+      const nama = document.getElementById("nama").value;
+      const kelas = document.getElementById("kelas").value;
+      const nis = document.getElementById("nis").value;
+
+      if(nama === "" || kelas === "" || nis === ""){
+        alert("Semua data harus diisi!");
+        return;
+      }
+
+      const siswa = {
+        nama,
+        kelas,
+        nis
+      };
+
+      if(editIndex === -1){
+        dataSiswa.push(siswa);
+      } else {
+        dataSiswa[editIndex] = siswa;
+        editIndex = -1;
+      }
+
+      document.getElementById("nama").value = "";
+      document.getElementById("kelas").value = "";
+      document.getElementById("nis").value = "";
+
+      renderTable();
+    }
+
+    function editData(index){
+      document.getElementById("nama").value = dataSiswa[index].nama;
+      document.getElementById("kelas").value = dataSiswa[index].kelas;
+      document.getElementById("nis").value = dataSiswa[index].nis;
+
+      editIndex = index;
+    }
+
+    function hapusData(index){
+      if(confirm("Yakin ingin menghapus data ini?")){
+        dataSiswa.splice(index, 1);
+        renderTable();
+      }
+    }
+  </script>
+
+</body>
+</html>
